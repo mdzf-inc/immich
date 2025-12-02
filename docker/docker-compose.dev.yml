@@ -16,7 +16,7 @@ name: immich-dev
 services:
   immich-server:
     container_name: immich_server
-    command: ['immich-dev']
+    command: ["immich-dev"]
     image: immich-server-dev:latest
     # extends:
     #   file: hwaccel.transcoding.yml
@@ -50,7 +50,7 @@ services:
       IMMICH_SOURCE_REF: local
       IMMICH_SOURCE_COMMIT: af2efbdbbddc27cd06142f22253ccbbbbeec1f55
       IMMICH_SOURCE_URL: https://github.com/immich-app/immich/commit/af2efbdbbddc27cd06142f22253ccbbbbeec1f55
-      IMMICH_BUILD: '9654404849'
+      IMMICH_BUILD: "9654404849"
       IMMICH_BUILD_URL: https://github.com/immich-app/immich/actions/runs/9654404849
       IMMICH_BUILD_IMAGE: development
       IMMICH_BUILD_IMAGE_URL: https://github.com/immich-app/immich/pkgs/container/immich-server
@@ -81,7 +81,7 @@ services:
       context: ../
       dockerfile: server/Dockerfile.dev
       target: dev
-    command: ['immich-web']
+    command: ["immich-web"]
     env_file:
       - .env
     ports:
@@ -148,11 +148,11 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_DB: ${DB_DATABASE_NAME}
-      POSTGRES_INITDB_ARGS: '--data-checksums'
+      POSTGRES_INITDB_ARGS: "--data-checksums"
     volumes:
       - ${UPLOAD_LOCATION}/postgres:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - 15432:5432
     shm_size: 128mb
   # set IMMICH_TELEMETRY_INCLUDE=all in .env to enable metrics
   # immich-prometheus:

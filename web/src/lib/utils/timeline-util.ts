@@ -163,7 +163,7 @@ export const toTimelineAsset = (unknownAsset: AssetResponseDto | TimelineAsset):
   const ratio = width / height;
   const city = assetResponse.exifInfo?.city;
   const country = assetResponse.exifInfo?.country;
-  const people = assetResponse.people?.map((person) => person.name) || [];
+  const people = assetResponse.people?.map((person: { name: string }) => person.name) || [];
 
   const localDateTime = fromISODateTimeUTCToObject(assetResponse.localDateTime);
   const fileCreatedAt = fromISODateTimeToObject(assetResponse.fileCreatedAt, assetResponse.exifInfo?.timeZone ?? 'UTC');
@@ -189,6 +189,7 @@ export const toTimelineAsset = (unknownAsset: AssetResponseDto | TimelineAsset):
     people,
     latitude: assetResponse.exifInfo?.latitude || null,
     longitude: assetResponse.exifInfo?.longitude || null,
+    tags: assetResponse.tags || null,
   };
 };
 

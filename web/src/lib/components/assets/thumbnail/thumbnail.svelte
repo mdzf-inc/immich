@@ -280,6 +280,22 @@
           </div>
         {/if}
 
+        <!-- Tags display -->
+        {#if asset.tags && asset.tags.length > 0}
+          <div class="absolute top-2 start-2 flex flex-wrap gap-1 max-w-[calc(100%-1rem)]">
+            {#each asset.tags.slice(0, 3) as tag}
+              <span class="px-2 py-0.5 text-xs font-medium text-white bg-black/60 backdrop-blur-sm rounded-full truncate max-w-[120px]">
+                {tag.name}
+              </span>
+            {/each}
+            {#if asset.tags.length > 3}
+              <span class="px-2 py-0.5 text-xs font-medium text-white bg-black/60 backdrop-blur-sm rounded-full">
+                +{asset.tags.length - 3}
+              </span>
+            {/if}
+          </div>
+        {/if}
+
         {#if !authManager.isSharedLink && showArchiveIcon && asset.visibility === AssetVisibility.Archive}
           <div class={['absolute start-2', asset.isFavorite ? 'bottom-10' : 'bottom-2']}>
             <Icon data-icon-archive icon={mdiArchiveArrowDownOutline} size="24" class="text-white" />
