@@ -1,5 +1,5 @@
 import type { TimelineDate, TimelineDateTime, TimelineYearMonth } from '$lib/utils/timeline-util';
-import type { AssetStackResponseDto, AssetVisibility, TagResponseDto } from '@immich/sdk';
+import type { AssetStackResponseDto, AssetVisibility, ExifResponseDto, TagResponseDto } from '@immich/sdk';
 
 export type ViewportTopMonth = TimelineYearMonth | undefined | 'lead-in' | 'lead-out';
 
@@ -36,6 +36,7 @@ export type TimelineAsset = {
   latitude?: number | null;
   longitude?: number | null;
   tags?: TagResponseDto[] | null;
+  exifInfo?: ExifResponseDto | null;
 };
 
 export type MoveAsset = { asset: TimelineAsset; date: TimelineDate };

@@ -23,6 +23,7 @@
   import { moveFocus } from '$lib/utils/focus-util';
   import { currentUrlReplaceAssetId } from '$lib/utils/navigation';
   import { TUNABLES } from '$lib/utils/tunables';
+  import { getAssetInfo, type AssetResponseDto } from '@immich/sdk';
   import { Icon } from '@immich/ui';
   import { onMount } from 'svelte';
   import type { ClassValue } from 'svelte/elements';
@@ -83,11 +84,34 @@
   let mouseOver = $state(false);
   let loaded = $state(false);
   let thumbError = $state(false);
+  let assetDetails = $state<AssetResponseDto | null>(null);
+  let isLoadingDetails = $state(false);
 
   let width = $derived(thumbnailSize || thumbnailWidth || 235);
   let height = $derived(thumbnailSize || thumbnailHeight || 235);
 
   let assetOwner = $derived(albumUsers?.find((user) => user.id === asset.ownerId) ?? null);
+
+  const loadAssetDetails = async () => {
+    if (isLoadingDetails || assetDetails) {
+      return;
+    }
+
+    isLoadingDetails = true;
+    try {
+      assetDetails = await getAssetInfo({ id: asset.id });
+    } catch (error) {
+      console.error('Failed to load asset details:', error);
+    } finally {
+      isLoadingDetails = false;
+    }
+  };
+
+  $effect(() => {
+    if (mouseOver && !usingMobileDevice && !assetDetails && !isLoadingDetails) {
+      void loadAssetDetails();
+    }
+  });
 
   const onIconClickedHandler = (e?: MouseEvent) => {
     e?.stopPropagation();
@@ -273,26 +297,10 @@
         {/if}
 
         {#if !!assetOwner}
-          <div class="absolute bottom-1 end-2 max-w-[50%]">
-            <p class="text-xs font-medium text-white drop-shadow-lg max-w-[100%] truncate">
+          <div class="absolute bottom-1 end-2 max-w-[50%] z-10">
+            <p class="text-xs font-medium text-white drop-shadow-lg max-w-full truncate">
               {assetOwner.name}
             </p>
-          </div>
-        {/if}
-
-        <!-- Tags display -->
-        {#if asset.tags && asset.tags.length > 0}
-          <div class="absolute top-2 start-2 flex flex-wrap gap-1 max-w-[calc(100%-1rem)]">
-            {#each asset.tags.slice(0, 3) as tag}
-              <span class="px-2 py-0.5 text-xs font-medium text-white bg-black/60 backdrop-blur-sm rounded-full truncate max-w-[120px]">
-                {tag.name}
-              </span>
-            {/each}
-            {#if asset.tags.length > 3}
-              <span class="px-2 py-0.5 text-xs font-medium text-white bg-black/60 backdrop-blur-sm rounded-full">
-                +{asset.tags.length - 3}
-              </span>
-            {/if}
           </div>
         {/if}
 
@@ -443,6 +451,38 @@
           <Icon data-icon-select icon={mdiCheckCircle} size="24" class="text-white/80 hover:text-white" />
         {/if}
       </button>
+    {/if}
+
+    <!-- Hover detail overlay -->
+    {#if mouseOver && !usingMobileDevice && assetDetails}
+      {@const hasTags = assetDetails.tags && assetDetails.tags.length > 0}
+      {@const hasDescription = assetDetails.exifInfo?.description}
+      <div
+        class="absolute inset-0 bg-black/80 backdrop-blur-sm text-white p-2 pointer-events-none overflow-y-auto"
+        transition:fade={{ duration: 150 }}
+      >
+        <div class="flex flex-col gap-1.5 text-xs">
+          {#if hasTags}
+            <div class="flex flex-wrap gap-1">
+              {#each assetDetails.tags as tag (tag.id)}
+                <span class="px-1.5 py-0.5 bg-white/30 rounded text-[10px]" title={tag.value}>
+                  {tag.value}
+                </span>
+              {/each}
+            </div>
+          {/if}
+
+          {#if hasDescription}
+            <div class="text-[11px] leading-tight whitespace-pre-wrap wrap-break-word">
+              {assetDetails.exifInfo?.description}
+            </div>
+          {/if}
+
+          {#if !hasTags && !hasDescription}
+            <div class="text-[11px] text-gray-400 italic">未设置标签和描述</div>
+          {/if}
+        </div>
+      </div>
     {/if}
   </div>
 </div>

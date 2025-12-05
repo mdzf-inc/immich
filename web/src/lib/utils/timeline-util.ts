@@ -190,6 +190,7 @@ export const toTimelineAsset = (unknownAsset: AssetResponseDto | TimelineAsset):
     latitude: assetResponse.exifInfo?.latitude || null,
     longitude: assetResponse.exifInfo?.longitude || null,
     tags: assetResponse.tags || null,
+    exifInfo: assetResponse.exifInfo || null,
   };
 };
 
