@@ -1,10 +1,9 @@
 
 
 # 或者使用 buildx 构建多平台镜像
-docker buildx build -f server/Dockerfile  --platform linux/amd64  -t immich-server:1.0.0  .
-docker tag immich-server:1.0.0 beatskitano/immich-server:1.0.0
-docker save -o /Users/xiaohui/Desktop/immich-server:1.0.0.tar immich-server:1.0.0
-
+docker buildx build -f server/Dockerfile  --platform linux/amd64  -t immich-server:1.0.2  .
+docker tag immich-server:1.0.2 beatskitano/immich-server:1.0.2
+docker save -o /Users/xiaohui/Desktop/immich-server:1.0.2.tar immich-server:1.0.2
 
 
 # 拉 amd64架构的 ghcr.io/immich-app/immich-machine-learning:v2 镜像并保存为 tar 文件
