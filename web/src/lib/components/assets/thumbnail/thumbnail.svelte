@@ -435,7 +435,7 @@
       <button
         type="button"
         onclick={onIconClickedHandler}
-        class={['absolute p-2 focus:outline-none', { 'cursor-not-allowed': disabled }]}
+        class={['absolute p-2 focus:outline-none z-30', { 'cursor-not-allowed': disabled }]}
         role="checkbox"
         tabindex={-1}
         aria-checked={selected}
@@ -458,7 +458,8 @@
       {@const hasTags = assetDetails.tags && assetDetails.tags.length > 0}
       {@const hasDescription = assetDetails.exifInfo?.description}
       <div
-        class="absolute inset-0 bg-black/80 backdrop-blur-sm text-white p-2 pointer-events-none overflow-y-auto"
+        class="absolute inset-0 bg-black/80 backdrop-blur-sm text-white pointer-events-none overflow-y-auto z-10"
+        style="padding: 40px 8px 8px 8px;"
         transition:fade={{ duration: 150 }}
       >
         <div class="flex flex-col gap-1.5 text-xs">
